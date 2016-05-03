@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="css/ui-box.css">
+        <link rel="stylesheet" href="css/ui-base.css">
+        <link rel="stylesheet" href="css/appcan.control.css">
+        <link rel="stylesheet" href="index_content/css/main.css">
+        <link rel="stylesheet" href="css/project/style.css">
+        <link rel="stylesheet" href="myfav/css/main.css">
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/jquery.min.js"></script>
+    </head>
+    <body class="um-vp bc-bg" >
+  <div class="ub ub-ver ub-fv " style="background-color: #e0dfdf">
+            <div id="header" class="uh t-wh ub" style="background-color: #B80E0E">
+                <div class="umw4 ub ub-ac ub-pc" ontouchstart="zy_touch()" onclick="winClose();">
+                    <div class="t-btn-a1 ub-img uwh-tBtn"></div>
+                </div>
+                <h1 class="ut ub-f1 ulev-3 ut-s tx-c" tabindex="0">注册</h1>
+             <div class="umw4 ub ub-ac ub-pc" ontouchstart="zy_touch()" onclick="">
+                  
+                </div>
+            </div>
+          
+            <div class="wisasc">
+                 <div class="colwi">用户名：</div>  
+                <div class="flio2" style="margin-top: 0.3em"> <input id="mobile" class="inputzc" type="text" placeholder="请输入您的手机号" /></div>
+           
+              </div>
+              <div class="wisasc">
+                 <div class="colwi"> 验证码：</div>
+              <div class="flio2"  style="margin-top: 0.3em"> 
+              <input  id="verificationCode" class="inputzc" type="text"  placeholder="请输入验证码"  /></div>
+                <input type="button" id="btnd" onclick="settime(this)" value="获取验证码" class="code_btn">
+              
+              </div>
+          <div class="wisasc">
+                <div class="colwi">邀请码：</div>  
+                <div class="flio2"  style="margin-top: 0.3em"> <input id="supplierCode" class="inputzc" type="text" placeholder="请输入商家邀请码" /></div>
+                <span id="tishi" class="colwi2 " ></span>
+             
+               <div class="clear"></div>
+              
+          </div> 
+          <div class="debtn" onclick="next();">下 一 步</div>
+        </div>
+        <script src="js/appcan.js"></script>
+        <script src="js/appcan.control.js"></script>
+    </body>
+     <script>
+        zy_init();
+        window.uexOnload = function(type){
+            if (!type) {
+               zy_con("content", "myfav_content.html", 0, $$("header").offsetHeight);
+            }
+            window.onorientationchange=window.onresize=function()
+            {
+                zy_resize("content",0,$$("header").offsetHeight);               
+            }
+        }
+        
+        //点击下一步
+        function next(){
+            var _mobile = $('#mobile').val().trim();
+            var _verificationCode = $('#verificationCode').val().trim();
+            var _supplierCode = $('#supplierCode').val().trim();
+            $.getJSON("http://211.149.186.252:1690/aos/memberUser/yanzheng.do?verificationCode=" + _verificationCode+"&supplierCode="+_supplierCode+"&mobile="+_mobile,function(data){
+                var objs = eval(eval(data));
+                if(parseInt(objs.appmsg) == 1){//成功
+                    window.localStorage["mobile"]=_mobile;
+                    window.localStorage["verificationCode"]=_verificationCode;
+                    window.localStorage["supplierCode"]=_supplierCode;
+                    appcan.openWinWithUrl('findpaswordaaa'+Math.random(),'findpasword.html');
+                }else if(parseInt(objs.appmsg) == 2){
+                    document.getElementById('tishi').innerHTML="验证码错误！";
+                }else if(parseInt(objs.appmsg) == 3){
+                    document.getElementById('tishi').innerHTML="商家邀请码不存在！";
+                    window.localStorage["mobile"]=_mobile;
+                    window.localStorage["verificationCode"]=_verificationCode;
+                    window.localStorage["supplierCode"]="";
+                    appcan.openWinWithUrl('findpaswordbbb'+Math.random(),'findpasword.html');
+                }
+            });
+        }
+    </script>
+   
+     <script type="text/javascript">
+        //获取短信验证码
+    var countdown=60; 
+    function settime(obj) { 
+        var patrn = /^(1)\d{10}$/;
+        var _phone = $('#mobile').val().trim();
+        if(!patrn.exec(_phone)){
+             uexWindow.toast(0,5,"请输入正确的电话号码！！",3000);
+             return;
+        }
+        if(countdown == 60){
+            var _mobile = $('#mobile').val().trim();
+            $.getJSON("http://211.149.186.252:1690/aos/memberUser/noteCode.do?start=0&&limit=10&&mobile="+_mobile,function(data){
+                var objs = eval(eval(data));
+                alert(objs.appmsg);
+           });
+        }
+        if (countdown == 0) { 
+            obj.removeAttribute("disabled");    
+            obj.value="获取验证码"; 
+            countdown = 60; 
+            return;
+        } else { 
+            obj.setAttribute("disabled", true); 
+            obj.value="剩余   "+ countdown + "  s"; 
+            countdown--; 
+        } 
+        setTimeout(function() { 
+            settime(obj) 
+        },1000) ;
+        
+    }
+    
+    </script>
+</html>
