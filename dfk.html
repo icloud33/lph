@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="css/ui-box.css">
+        <link rel="stylesheet" href="css/ui-base.css">
+        <link rel="stylesheet" href="css/appcan.control.css">
+        <link rel="stylesheet" href="index_content/css/main.css">
+    <link rel="stylesheet" href="css/project/style.css">
+     <link rel="stylesheet" href="css/ui-input.css">
+        <link rel="stylesheet" href="myfav/css/main.css">
+    <script src="js/zy_control.js"></script>
+    <script src="js/zy_click.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/jquery.min.js"></script>
+    </head>
+    <body class="um-vp bc-bg">
+         <div class="ub ub-ver ub-fv " style="background-color: #e0dfdf">
+            <div id="header" class="uh t-wh ub" style="background-color: #B80E0E">
+                <div class="umw4 ub ub-ac ub-pc" ontouchstart="zy_touch()" onclick="winClose();">
+                    <div class="t-btn-a1 ub-img uwh-tBtn"></div>
+                </div>
+                <h1 class="ut ub-f1 ulev-3 ut-s tx-c" tabindex="0">
+                    待付款
+                </h1>
+             <div class="umw4 ub ub-ac ub-pc" ontouchstart="zy_touch()" onclick="">
+                  
+                </div>
+            </div>
+            
+            <div id="supplier"></div>
+          <!--
+             <div class="wrapper">
+                <div class="wid100 bgwop3 ">
+                    <div class="wodedd2" style="width:88%;">
+                                                                        积分商城
+                        <div class="zuojiantous" style="left: 30%;"></div>
+                        <span class="youts">卖家已发货</span>
+                    </div>
+                    <div class="woutlin" style="width:90%;">     
+                        <img src="images/Bzffs_03.png" style="margin: 10px;width: 5em;"/>
+                        <span class="textzuo">淹死的鱼昵称2324</span>
+                    </div>
+                    <div class="xiabzuo" >
+                                                            共一件商品，合计：￥93.00元
+                    &nbsp;
+                    <div class="dfbordq2" >去支付</div>
+                </div>
+            </div>
+            -->
+           
+
+
+
+
+            
+     
+     
+
+        </div>
+        
+  
+       <script src="js/appcan.js"></script>
+        <script src="js/appcan.control.js"></script>
+ </body>
+
+<script>
+    window.uexOnload=function(type){
+            var _mobile=window.localStorage["mobile"];
+            $.getJSON("http://211.149.186.252:1690/aos/memberUser/ispayOrder.do?start=0&&limit=20&&mobile="+_mobile,function(data){
+                var objs = eval(eval(data));
+                if(objs.appmsg == 1){
+                    uexWindow.toast(0,5,"您还没有待付款的订单！！！",3000);
+                    appcan.openWinWithUrl('grzx'+Math.random(),'grzx.html');
+                    return;
+                }
+                for(var i=0;i<data._rows.length;i++){
+                    $("#supplier").append("<div class=\"wrapper\"><div class=\"wid100 bgwop3 \"><div class=\"wodedd2\" style=\"width:88%;\">积分商城<div class=\"zuojiantous\" style=\"left: 30%;\"></div><span class=\"youts\">等待付款</span></div><div class=\"woutlin\" style=\"width:88%;\"><img src=\"images/Bzffs_03.png\" style=\"margin: 5px;\"/><span class=\"textzuo\">订单编号："+data._rows[i].order_sn+"</span></div><div class=\"xiabzuo\" style=\"width:90%;\">实付款：￥"+data._rows[i].order_price+"元，"+data._rows[i].order_price_yb+"(积分)<div class=\"dfbordq2\" onclick=\"qzf('"+data._rows[i].order_sn+"','"+data._rows[i].consignee+"','"+data._rows[i].phone+"','"+data._rows[i].address+"','"+data._rows[i].order_time+"',"+data._rows[i].order_price+","+data._rows[i].order_price_yb+");\">去支付</div>&nbsp;</div></div></div>");
+                    $("#supplier").append("<div class=\"clear\" style=\" height:1em; width:100%;\"></div>");
+                }
+            });
+        }
+        
+        
+        
+        //去支付
+        function qzf(order_sn,consignee,phone,address,order_time,order_price,order_price_yb){
+            window.localStorage["order_sn"]=order_sn;
+            window.localStorage["consignee"]=consignee;
+            window.localStorage["phone"]=phone;
+            window.localStorage["address"]=address;
+            window.localStorage["order_time"]=order_time;
+            window.localStorage["order_price"]=order_price;
+            window.localStorage["order_price_yb"]=order_price_yb;
+            appcan.openWinWithUrl('dhxqyw'+Math.random(),'dhxqyw.html');
+        }
+    
+
+</script>
+
+
+<script type="text/javascript">
+
+    $(function(){
+    })
+</script>
+   
+</html>

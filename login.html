@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="css/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="css/ui-box.css">
+        <link rel="stylesheet" href="css/ui-base.css">
+        <link rel="stylesheet" href="css/appcan.control.css">
+        <link rel="stylesheet" href="index_content/css/main.css">
+        <link rel="stylesheet" href="css/project/style.css">
+        <link rel="stylesheet" href="myfav/css/main.css">
+        <script src="js/zy_control.js"></script>
+        <script src="js/zy_click.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/jquery.min.js"></script>
+    </head>
+    <body class="um-vp bc-bg">
+        <div class="ub ub-ver ub-fv " style="background-color: #e0dfdf">
+            <div id="header" class="uh t-wh ub" style="background-color: #B80E0E">
+                <div class="umw4 ub ub-ac ub-pc" ontouchstart="zy_touch()" onclick="winClose();">
+                    <div class="t-btn-a1 ub-img uwh-tBtn"></div>
+                </div>
+                <h1 class="ut ub-f1 ulev-3 ut-s tx-c" tabindex="0">登录</h1>
+             <div class="umw4 ub ub-ac ub-pc" ontouchstart="zy_touch()" onclick="">
+                </div>
+            </div>
+           
+            <div class="wisasc">
+                 <img src="images/zh.png" style="float: left;margin-top: 0.5em;margin-left: 2em;"/>
+              <div class="flio" style="margin-top: 0.2em"><input autofocus="autofocus" id="txtName" class="inputb" type="text" /></div>
+               <span id="tishi" class="colwi2 " ></span> 
+            </div>
+             <div class="wisasc">
+                 <img src="images/mm.png" style="float: left;margin-top: 0.5em;margin-left: 2em;" />
+              <div class="flio" style="margin-top: 0.2em"><input id="txtPwd" class="inputb" type="password" /></div>
+               <div id="tishi2" class="colwi2 "></div>
+            </div>
+         <!-- <div class="userne"  style="background-color: #B80E0E">
+              <img src="images/log1.png"  />
+              <div class="flio"><input id="txtName" class="inputb" type="text" /></div>
+              <span id="tishi" class="colwi2 " ></span> 
+              <div class="clear"></div>
+              <div class="chengkai"></div>
+                <img src="images/log2.png"  />
+              <div class="flio"><input id="txtPwd" class="inputb" type="password" /></div>
+              <div id="tishi2" class="colwi2 "></div>
+               <div class="clear"></div>
+              <div class="chengkai"></div> 
+          </div>-->
+              <div class="debtn" onclick="doLogin();">登 录</div>
+               <div class="clear"></div>
+              <div class="stxiabu" style="color: #000000;"  onclick=""><span onclick="appcan.openWinWithUrl('忘记密码','resetpsw.html');">忘记密码？</span><div class="fl_r"  onclick="doRegister();">注册</div></div>
+         
+        </div>
+        <script src="js/appcan.js"></script>
+        <script src="js/appcan.control.js"></script>
+    </body>
+   
+    <script type="text/javascript">
+       window.uexOnload = function(type){
+            clickfun();   
+        }
+        var titHeight = 0;
+             
+    window.AJAX = {
+    callBack : {},index : 1,
+    get : function(url,succCall,errCall,timeout){
+        var id = this.index++;
+        this.callBack[id] = [succCall,errCall];
+        uexXmlHttpMgr.open(id,'get',url,(timeout||0));
+        this._send(id);
+    },
+    post : function(url,data,succCall,errCall,timeout){
+        var id = this.index++;
+        this.callBack[id] = [succCall,errCall];
+        uexXmlHttpMgr.open(id,'post',url,(timeout||0));
+        if(data){
+            for(var k in data){
+                uexXmlHttpMgr.setPostData(id,0,k,data[k]);
+            }
+        }
+        this._send(id);
+    },
+    _send : function(id){
+        uexXmlHttpMgr.onData = this.onData;
+        uexXmlHttpMgr.send(id);
+        
+    },
+    onData : function(inOpCode,inStatus,inResult){
+        var that=AJAX,callBack = that.callBack[inOpCode]||[];
+        if(inStatus==-1){
+            callBack[1] && callBack[1]();
+        }else if(inStatus==1){
+            callBack[0] && callBack[0](inResult);   
+        }
+        delete that.callBack[inOpCode];
+    }
+};
+      
+      $(function(){
+          //alert(appcan.isString("111"));
+          appcan.logs('这是一个打印消息');
+      })
+       function clickfun(){uexWindow.didShowKeyboard = 0;}
+      function doLogin(){
+          var _mobile = $('#txtName').val().trim();
+          var _pwd = $('#txtPwd').val().trim();
+
+          AJAX.get('http://211.149.186.252:1690/aos/memberUser/userLogin.do?userName=' +_mobile + "&userPass=" + _pwd,function(res){
+            if(res == 1){
+                document.getElementById('tishi').innerHTML="用户名不存在！";
+                setTimeout(function(){
+                    $("#tishi").toggleClass("displaynone");
+                }, 3000);
+            }else if (res == 2){
+                window.localStorage["mobile"]=_mobile;
+                window.localStorage["pass"]=_pwd;
+                appcan.openWinWithUrl('index'+Math.random(),'index.html');
+            }else{
+                document.getElementById('tishi2').innerHTML="密码不正确!";
+                 setTimeout(function(){
+                    $("#tishi2").toggleClass("displaynone");
+                }, 3000);
+            }
+        },function(){
+            alert('出错了');
+        });
+              
+            // appcan.ajax({
+            // url : 'http://127.0.0.1:1690/aos/aos/memberUser/userLogin.jhtml',
+            // // url : 'http://www.baidu.com',
+            // type : 'GET',
+            // data : {
+                // userName : _name,
+                // userPass : _pwd
+            // },
+            // //offline : true,
+            // //offlineDataPath : 'wgt://aaa/',
+            // success : function(data) {
+                // alert(data);
+                // appcan.openWinWithUrl('index','index.html');
+            // },
+            // error : function(e) {
+                // alert(e);
+            // }
+           //});
+      }
+      
+      function doRegister(){
+          appcan.openWinWithUrl('register'+Math.random(),'register.html');
+      }
+      
+       // appcan.button(".nav-btn", "btn-act", function() {
+           // if(this.id == "nav-left"){
+               // appcan.window.close(-1);
+           // }
+        // })
+      
+    </script>
+</html>
